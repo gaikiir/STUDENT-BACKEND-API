@@ -1,0 +1,79 @@
+=>schema are collection of objects in databse 
+=> midle ware is a software program that add functionality in web development it handle requests coming in-
+response coming out from the server to the client
+=> it basically used in creating a rest api using express.js
+=> midle ware help you add functionality to web application in modular and reusable ways 
+=> midle ware sit between requests and responses its resiponsible for handling things like logging, authentication, validation and errors handling
+
+body-parser
+=> body-parser is midleware use to handle body incoming http requests like req.body that make the accessibility easier (req.body in your route)
+
+=>Using Built-In express.json() (Modern Approach)
+
+ getStudentById:async(request,response,next)=>{
+        try{
+           const student = await Models.findById(request.params.id);
+            if(!student){
+                //if student is not found respond with status error message of the code 
+              return  response.status(404).json({message:`student does not exist`});
+            }
+            //if the request is successfully respond with status code 200 and the student
+            response.status(200).json(student);
+        } catch(error){
+            //if the request does not meet the required condition then give us the status of the of code with error message
+            if(error instanceof mongoose.CastError){
+                return response.status(400).json({message:`Invalid student Id`});
+            }
+            next(error);
+        }
+    },
+
+    updeteStudent:async(request,response,next)=>{
+        try{
+            const student = await Models.findByIdAndUpdate(request.params.id,request.body,{new:true});
+            response.status(200).json(student);
+            if(!student){
+                return response.status(404).json({message:`student does not exist`});
+            }
+        } catch(error){
+            console.log(error.message)
+            if(error instanceof mongoose.CastError){
+                return response.status(400).json({message:`Invalid student Id`});
+            }
+            next(error);
+        }
+    },
+    deleteStudent:async(request,response,next)=>{
+        try{
+            const student = await Models.findByIdAndDelete(request.params.id);
+            response.status(200).json({message:`student deleted successfully`});
+            if(!student){
+                return response.status(404).json({message:`student does not exist`});
+            }
+        } catch(error){
+            console.log(error.message)
+            if(error instanceof mongoose.CastError){
+                return response.status(400).json({message:`Invalid student Id`});
+            }
+            next(error);
+        }
+    }
+
+
+ email: Joi().string().email({minDomainSegments: 2,tlds: ['com', 'net', 'org']}).lowercase()
+        .required()
+        .pattern(/^[a-zA-Z0-9._%+]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+        .message({
+            'string.email': 'Please enter a valid email address',
+            'string.pattern.base': 'Please email must match the required pattern',
+            'any.required': 'Please email is required'
+        }),
+    password: Joi.string()
+        .min(8).
+        lowercase()
+        .required()
+        .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/)
+        .message({
+            'string.pattern.base':
+                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).',
+        })

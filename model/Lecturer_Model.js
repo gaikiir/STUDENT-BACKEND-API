@@ -2,22 +2,22 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;// initialize mongoose schema object for creating schema lists   
-const LectSchema = new mongoose.Schema({
+const LectSchema = new Schema({
     FirstName:{
         type:String,
-        required:['firt_name is required please']
+        required:[true,'firt_name is required please']
     },
     LastName:{
         type:String,
-        required:['last_name is required please']
+        required:[true,'last_name is required please']
     },
     Gender:{
         type:String,
-        required:['gender is required please']
+        required:[true,'gender is required please']
     },
     Email:{
         type:String,
-        required:['email is required please']
+        required:[true,'email is required please']
     },
 });
 

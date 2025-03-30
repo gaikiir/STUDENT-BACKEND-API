@@ -1,7 +1,7 @@
 const UsersAccountInfo = require('../model/auth_model');
 const {auth_modelSchema} = require('../helpers/validation');
 const createError = require('http-errors');
-
+const {signAccessToken,signRefreshToken} = require('../helpers/Jwthelpers')
 module.exports ={
     Register: async(request,response,next)=>{
         try{
@@ -35,7 +35,10 @@ module.exports ={
             if (!isMatchedpwd) {
                 throw createError.Unauthorized('Username/Password not valid');
             }
-            respond.send(user)
+            //respond.send(user)
+            const AccessToken =await  signAccessToken(user.id);
+            const refreshToken =await  signRefreshToken(user.id);
+            respond.send({AccessToken,refreshToken});
         } catch (error) {
             if (error.isJoi === true)
                 return next(createError.BadRequest('Invalid username/password'));
@@ -44,4 +47,5 @@ module.exports ={
     }
 
 }
+
 

@@ -2,18 +2,36 @@ const mongoose = require("mongoose");
 const userModels = require("../model/Student_Model");
 const createError = require("http-errors");
 
+// Utility function to validate MongoDB ObjectId
+const isValidObjectId = (id) => {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw createError(400, "Invalid student ID");
+    }
+};
+
+// Utility function to validate required student fields
+const validateStudentData = (data) => {
+    const requiredFields = ['FirstName', 'LastName', 'Gender'];
+    const missingFields = requiredFields.filter(field => !data[field]);
+    
+    if (missingFields.length > 0) {
+        throw createError(422, `Missing required fields: ${missingFields.join(', ')}`);
+    }
+};
+
 module.exports = {
     Allstudents: async (request, response, next) => {
         try {
             const students = await userModels.find();
             response.send(students);
         } catch (error) {
-            next(error); // Forward error to Express
+            next(error);
         }
     },
 
     addstudent: async (request, response, next) => {
         try {
+            validateStudentData(request.body);
             const newStudent = new userModels(request.body);
             const result = await newStudent.save();
             response.send(result);
@@ -27,16 +45,13 @@ module.exports = {
     },
 
     getStudentById: async (request, response, next) => {
-        const id = request.params.id;
-        
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return next(createError(400, "Invalid student ID"));
-        }
-
         try {
+            const { id } = request.params;
+            isValidObjectId(id);
+
             const student = await userModels.findById(id);
             if (!student) {
-                return next(createError(404, "Student not found"));
+                throw createError(404, "Student not found");
             }
             response.send(student);
         } catch (error) {
@@ -45,60 +60,57 @@ module.exports = {
     },
 
     updateStudent: async (request, response, next) => {
-        const id = request.params.id;
-console.log('received Id', id)
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return next(createError(400, "Invalid student ID"));
-        }
-
         try {
-            const update = request.body;
-            const options = { new: true };
-            const Newupdate = await userModels.findByIdAndUpdate(id, update, options);
+            const { id } = request.params;
+            isValidObjectId(id);
+            validateStudentData(request.body);
+
+            const updatedStudent = await userModels.findByIdAndUpdate(
+                id,
+                request.body,
+                { new: true }
+            );
             
-            if (!Newupdate) {
-                return next(createError(404, "Student not found"));
+            if (!updatedStudent) {
+                throw createError(404, "Student not found");
             }
-            response.send(Newupdate);
+            response.send(updatedStudent);
         } catch (error) {
             next(error);
         }
     },
 
     patchStudent: async (request, response, next) => {
-        const id = request.params.id;
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return next(createError(400, "Invalid student ID"));
-        }
-
         try {
-            const update = request.body;
-            const options = { new: true };
-            const Newupdate = await userModels.findByIdAndUpdate(id, update, options);
+            const { id } = request.params;
+            isValidObjectId(id);
+
+            // For PATCH, we don't validate all fields since it's a partial update
+            const updatedStudent = await userModels.findByIdAndUpdate(
+                id,
+                request.body,
+                { new: true }
+            );
             
-            if (!Newupdate) {
-                return next(createError(404, "Student not found"));
+            if (!updatedStudent) {
+                throw createError(404, "Student not found");
             }
-            response.send(Newupdate);
+            response.send(updatedStudent);
         } catch (error) {
             next(error);
         }
     },
 
     deleteStudent: async (request, response, next) => {
-        const id = request.params.id;
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return next(createError(400, "Invalid student ID"));
-        }
-
         try {
-            const student = await userModels.findByIdAndDelete(id);
-            if (!student) {
-                return next(createError(404, "Student not found"));
+            const { id } = request.params;
+            isValidObjectId(id);
+
+            const deletedStudent = await userModels.findByIdAndDelete(id);
+            if (!deletedStudent) {
+                throw createError(404, "Student not found");
             }
-            response.send(student);
+            response.send(deletedStudent);
         } catch (error) {
             next(error);
         }

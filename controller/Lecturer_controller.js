@@ -45,7 +45,8 @@ module.exports={
     },
     updateLecture: async(request,response,next)=>{
         try{
-            const id = request.params.id;C
+            const id = request.params.id;
+            console.log("http received id",id)
             const update = request.body;
             const options = {new:true};
             const result = await LectModel.findByIdAndUpdate(id,update,options);

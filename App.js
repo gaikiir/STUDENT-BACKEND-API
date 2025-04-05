@@ -17,7 +17,7 @@ const helmet = require('helmet');
 
 app.use(helmet());
 const Limiter = rateLimit({
-    max:1000,
+    max:1050,
     windowMs: 60 * 60 * 1000,
     message: 'Too many requests from this IP Address please try again later'
 });

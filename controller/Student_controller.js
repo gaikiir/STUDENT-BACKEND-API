@@ -28,6 +28,7 @@ module.exports = {
             next(error);
         }
     },
+    
 
     addstudent: async (request, response, next) => {
         try {
@@ -48,7 +49,7 @@ module.exports = {
         try {
             const { id } = request.params;
             isValidObjectId(id);
-
+            console.log( `http received id ${id}` );
             const student = await userModels.findById(id);
             if (!student) {
                 throw createError(404, "Student not found");
@@ -62,6 +63,7 @@ module.exports = {
     updateStudent: async (request, response, next) => {
         try {
             const { id } = request.params;
+              console.log( `http received id ${id}` );
             isValidObjectId(id);
             validateStudentData(request.body);
 

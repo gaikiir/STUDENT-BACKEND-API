@@ -5,11 +5,13 @@ const bcrypt = require('bcrypt');
 const UserinfoSchema = new Schema({
     email:{
         type:String,
-        required:['email is required please']
+    required: 'Email is required'
+
     },
     password:{
         type:String,
-        required:['password is required please']
+    required: 'Password is required'
+
     }
 })
 
@@ -37,8 +39,8 @@ UserinfoSchema.methods.isValidPassword = async function(password) {
 }
 
 //creating users account info models 
-const UserInfoModel = mongoose.model('users', UserinfoSchema);
+const UserInfoModel = mongoose.model('User', UserinfoSchema);
+
 
 //export the model object
 module.exports = UserInfoModel;
-

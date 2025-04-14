@@ -1,28 +1,27 @@
-
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;// initialize mongoose schema object for creating schema lists   
+const Schema = mongoose.Schema; // initialize mongoose schema object for creating schema lists   
 const LectSchema = new Schema({
-    FirstName:{
-        type:String,
-        required:[true,'firt_name is required please']
+    firstName: {
+        type: String,
+        required: [true, 'First name is required']
     },
-    LastName:{
-        type:String,
-        required:[true,'last_name is required please']
+    lastName: {
+        type: String,
+        required: [true, 'Last name is required']
     },
-    Gender:{
-        type:String,
-        required:[true,'gender is required please']
+    gender: {
+        type: String,
+        required: [true, 'Gender is required']
     },
-    Email:{
-        type:String,
-        required:[true,'email is required please']
+    email: {
+        type: String,
+        required: [true, 'Email is required']
     },
 });
 
-//this is the modele object
-const LecturerModel = mongoose.model('Lecturer',LectSchema);
+// this is the model object
+const LecturerModel = mongoose.model('Lecturer', LectSchema);
 
-//export the model object
+// export the model object
 module.exports = LecturerModel;

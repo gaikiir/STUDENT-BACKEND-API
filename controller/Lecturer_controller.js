@@ -26,8 +26,8 @@ module.exports={
         }
     },
     getLecturerById: async(request,response,next)=>{
-        const id = request.params.id;
         try{
+            const id = request.params.id;
             const lecturer = await LectModel.findById(id);
             const result = lecturer.save();
             response.send(result)

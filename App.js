@@ -13,6 +13,7 @@ const rateLimit = require('express-rate-limit');
 const routes = require('./Routes/Student_Route');
 const authRoute = require('./Routes/auth_route');
 const lectRoutes = require('./Routes/Lecturer_routes');
+const AssignRoutes = require('./Routes/Assign_Route')
 const helmet = require('helmet');
 
 app.use(helmet());
@@ -38,7 +39,8 @@ app.use(Cors({
 
 app.use('/limit/auth',authRoute)
 app.use('/limit/routes',routes)
-app.use('/limit/lectroute',lectRoutes);
+app.use('/limit/lectroute', lectRoutes);
+app.use("/limit/assign", AssignRoutes);
 
 
 

@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -5,7 +6,15 @@ const Schema = mongoose.Schema;
 const assignmentSchema = new Schema({
     createEvents:{
         type:String,
-        required:['createEvents is required please']
+        required:[true,'createEvents is required please']
+    },
+    title: {
+        type: String,
+        required: [true,'Title is required please']
+    },
+    author: {
+        type: String,
+        required:[true,'Please Author is required']
     }
 })
 
